@@ -1,0 +1,213 @@
+// src/components/SyllabusModal.jsx
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, Trophy, AlertTriangle, Lightbulb, Activity } from "lucide-react";
+import { SYLLABUS_DATA, KEY_FINDINGS } from "../lib/constants";
+
+export const SyllabusModal = ({ isOpen, onClose }) => {
+  const [showPaywall, setShowPaywall] = useState(false);
+  const scrollRef = useRef(null);
+
+  // Lock body scroll when modal is open
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = 'unset';
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [isOpen]);
+
+  // Show paywall after 40% scroll or 60 seconds
+  useEffect(() => {
+    if (!isOpen) return;
+    let timer;
+    const handleScroll = () => {
+      if (!scrollRef.current) return;
+      const el = scrollRef.current;
+      const scrollTop = el.scrollTop;
+      const scrollHeight = el.scrollHeight - el.clientHeight;
+      if (scrollHeight > 0 && scrollTop / scrollHeight > 0.4) {
+        setShowPaywall(true);
+      }
+    };
+    if (scrollRef.current) {
+      scrollRef.current.addEventListener('scroll', handleScroll);
+    }
+    timer = setTimeout(() => setShowPaywall(true), 60000);
+    return () => {
+      if (scrollRef.current) {
+        scrollRef.current.removeEventListener('scroll', handleScroll);
+      }
+      clearTimeout(timer);
+    };
+  }, [isOpen]);
+
+  const getDensityStyle = (density) => {
+    if (density === 'VERY HIGH') return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+    if (density === 'HIGH') return 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30';
+    return 'bg-white/10 text-slate-300 border-white/20';
+  };
+
+  const getFindingIcon = (iconStr) => {
+    if (iconStr === "⚠️" || iconStr === "🚨") return <AlertTriangle className="w-5 h-5 text-yellow-400" />;
+    if (iconStr === "📌") return <Lightbulb className="w-5 h-5 text-cyan-400" />;
+    return <Activity className="w-5 h-5 text-purple-400" />;
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6"
+        >
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-[#0B1120]/90 backdrop-blur-xl" onClick={onClose} />
+
+          {/* Modal Container */}
+          <motion.div
+            initial={{ y: 50, opacity: 0, scale: 0.95 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: 20, opacity: 0, scale: 0.95 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="relative w-full max-w-6xl max-h-[90vh] bg-[#13141f] border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-5 border-b border-white/10 bg-white/[0.02]">
+              <div>
+                <div className="flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-cyan-400 mb-1">
+                  <Trophy className="w-4 h-4" /> Grandmaster Overview
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-display font-bold text-white">
+                  Syllabus Dominance <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Matrix</span>
+                </h2>
+              </div>
+              <button
+                onClick={onClose}
+                className="p-2 rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Scrollable Body */}
+            <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 sm:p-8 custom-scrollbar">
+                        {/* Paywall Modal */}
+                        <AnimatePresence>
+                          {showPaywall && (
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.95 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0.95 }}
+                              transition={{ type: "spring", damping: 22, stiffness: 300 }}
+                              className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6"
+                              style={{ background: "rgba(11,17,32,0.92)" }}
+                            >
+                              <motion.div className="bg-[#181e2a] border border-cyan-500/30 rounded-2xl shadow-2xl max-w-md w-full p-8 flex flex-col items-center text-center relative">
+                                <button
+                                  onClick={() => setShowPaywall(false)}
+                                  className="absolute top-3 right-3 p-2 rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+                                  aria-label="Close paywall"
+                                >
+                                  <X className="w-5 h-5" />
+                                </button>
+                                <div className="flex items-center justify-center mb-4">
+                                  <Trophy className="w-8 h-8 text-yellow-400 mr-2" />
+                                  <span className="text-lg font-bold text-cyan-300">Unlock Rigorous Analysis</span>
+                                </div>
+                                <h3 className="text-2xl font-display font-bold text-white mb-2">Go Beyond the Matrix</h3>
+                                <p className="text-base text-slate-300 mb-4">
+                                  Get solved PYQs, practice sessions, and deeper analytics for every unit.<br />
+                                  <span className="text-yellow-400 font-semibold">Subscribe for ₹1500/month</span> to access advanced features and more rigorous analysis.
+                                </p>
+                                <a
+                                  href="#pricing"
+                                  onClick={() => {
+                                    setShowPaywall(false);
+                                    onClose && onClose();
+                                    setTimeout(() => {
+                                      document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                                    }, 300);
+                                  }}
+                                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-white font-semibold bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 transition-all duration-300 mt-2"
+                                >
+                                  Unlock Now — ₹1500/mo
+                                </a>
+                                <p className="mt-3 text-xs text-slate-500">Cancel anytime. Instant access after payment.</p>
+                              </motion.div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                {/* Main Table Section */}
+                <div className="lg:col-span-2 space-y-6">
+                  <h3 className="text-sm font-mono tracking-widest text-slate-400 uppercase">Priority Table</h3>
+                  <div className="overflow-x-auto rounded-xl border border-white/10 bg-[#0d0e1a]">
+                    <table className="w-full text-left border-collapse min-w-[700px]">
+                      <thead>
+                        <tr className="bg-white/5 border-b border-white/10 text-xs font-mono tracking-wider text-cyan-400 uppercase">
+                          <th className="p-4 whitespace-nowrap">Unit</th>
+                          <th className="p-4">Domain</th>
+                          <th className="p-4 whitespace-nowrap">Sec B</th>
+                          <th className="p-4 whitespace-nowrap">Sec C</th>
+                          <th className="p-4">Density</th>
+                          <th className="p-4">Priority</th>
+                        </tr>
+                      </thead>
+                      <tbody className="text-sm">
+                        {SYLLABUS_DATA.map((row, i) => (
+                          <tr key={i} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                            <td className="p-4 font-mono font-bold text-cyan-300 whitespace-nowrap">{row.unit}</td>
+                            <td className="p-4 text-slate-300">{row.domain}</td>
+                            <td className="p-4 font-mono text-slate-400 whitespace-nowrap">{row.pctB}%</td>
+                            <td className="p-4 font-mono font-medium text-green-400 whitespace-nowrap">{row.pctC}%</td>
+                            <td className="p-4">
+                              <span className={`px-3 py-1 rounded-full text-[10px] font-mono font-bold border whitespace-nowrap ${getDensityStyle(row.density)}`}>
+                                {row.density}
+                              </span>
+                            </td>
+                            <td className="p-4">
+                              <span className={`w-8 h-8 rounded-lg flex items-center justify-center font-mono font-bold ${row.priority <= 3 ? 'bg-yellow-500/20 text-yellow-400' : 'bg-white/10 text-slate-400'}`}>
+                                {row.priority}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Key Findings Section */}
+                <div className="space-y-6">
+                  <h3 className="text-sm font-mono tracking-widest text-slate-400 uppercase">Key Points</h3>
+                  <div className="flex flex-col gap-4">
+                    {KEY_FINDINGS.map((finding, i) => (
+                      <div key={i} className={`flex items-start gap-4 p-4 rounded-xl border ${finding.type === 'warn' || finding.type === 'alert' ? 'bg-yellow-500/5 border-yellow-500/20' : 'bg-cyan-500/5 border-cyan-500/20'}`}>
+                        <div className="shrink-0 mt-0.5">{getFindingIcon(finding.icon)}</div>
+                        <p className="text-sm text-slate-300 leading-relaxed">{finding.text}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Strategic Note */}
+                  <div className="mt-8 p-6 rounded-2xl bg-gradient-to-br from-yellow-500/10 to-transparent border border-yellow-500/20 relative overflow-hidden">
+                    <div className="absolute -top-6 -right-6 text-yellow-500/10 text-9xl font-display font-bold">"</div>
+                    <h4 className="text-xs font-mono tracking-widest text-yellow-400 uppercase mb-3">Strategic Insight</h4>
+                    <p className="text-sm text-slate-300 leading-relaxed relative z-10">
+                      Sections B and C share the same content universe but differ in cognitive demand. For every concept in your revision, ask: <span className="text-yellow-400 font-medium">"How would an examiner convert this into a multi-panel experiment?"</span> Mastering this reflex is what separates 99th percentile scorers.
+                    </p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
