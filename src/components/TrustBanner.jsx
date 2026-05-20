@@ -1,4 +1,3 @@
-// src/components/TrustBanner.jsx
 import { motion } from "framer-motion";
 
 const trustMarks = [
@@ -68,8 +67,8 @@ export const TrustBanner = () => {
                 <img
                   src={mark.src}
                   alt={mark.name}
-                  /* brightness-0 invert makes black logos white. Remove them if your PNG is already white */
-                  className="h-8 md:h-10 w-auto object-contain relative z-10 opacity-50 grayscale group-hover:opacity-100 group-hover:grayscale-0 group-hover:drop-shadow-[0_0_12px_rgba(6,182,212,0.5)] transition-all duration-500 brightness-0 invert"
+                  /* mix-blend-screen perfectly hides black backgrounds leaving only the white logo */
+                  className="h-8 md:h-10 w-auto object-contain relative z-10 opacity-50 mix-blend-screen group-hover:opacity-100 group-hover:drop-shadow-[0_0_12px_rgba(6,182,212,0.5)] transition-all duration-500"
                 />
               )}
             </motion.div>
