@@ -1,4 +1,30 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
+
+// 1. We create a dedicated component for images to handle errors gracefully
+const ImageMark = ({ src, name }) => {
+  const [imgFailed, setImgFailed] = useState(false);
+
+  // If the image fails to load (missing file, typo, etc), completely remove the <img> 
+  // tag and render the text fallback instead.
+  if (imgFailed) {
+    return (
+      <div className="relative z-10 font-display text-lg md:text-xl tracking-[0.2em] uppercase text-slate-500 group-hover:text-white transition-all duration-500 flex items-center">
+        <span className="font-bold">EMORY</span>
+        <span className="font-light ml-2 opacity-80">UNIVERSITY</span>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={name}
+      className="h-8 md:h-10 w-auto object-contain relative z-10 opacity-50 mix-blend-screen group-hover:opacity-100 group-hover:drop-shadow-[0_0_12px_rgba(6,182,212,0.5)] transition-all duration-500"
+      onError={() => setImgFailed(true)}
+    />
+  );
+};
 
 const trustMarks = [
   {
@@ -33,7 +59,7 @@ const trustMarks = [
   {
     name: "Emory University",
     type: "image",
-    src: "/logos/emory.png", // Ensure this file is inside your public/logos/ folder
+    src: "/logos/emory.png", // Make sure file is exactly "emory.png" (lowercase) in your public/logos/ folder
   },
 ];
 
@@ -56,7 +82,7 @@ export const TrustBanner = () => {
               className="group relative flex items-center justify-center cursor-default"
             >
               {/* Subtle Cyan Glow behind the logo/text on hover */}
-              <div className="absolute inset-0 bg-cyan-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-cyan-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               
               {/* Conditional Rendering: Text vs Image */}
               {mark.type === "text" ? (
@@ -64,12 +90,7 @@ export const TrustBanner = () => {
                   {mark.content}
                 </div>
               ) : (
-                <img
-                  src={mark.src}
-                  alt={mark.name}
-                  /* mix-blend-screen perfectly hides black backgrounds leaving only the white logo */
-                  className="h-8 md:h-10 w-auto object-contain relative z-10 opacity-50 mix-blend-screen group-hover:opacity-100 group-hover:drop-shadow-[0_0_12px_rgba(6,182,212,0.5)] transition-all duration-500"
-                />
+                <ImageMark src={mark.src} name={mark.name} />
               )}
             </motion.div>
           ))}
