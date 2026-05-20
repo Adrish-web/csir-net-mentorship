@@ -1,4 +1,3 @@
-// src/App.jsx
 import { useState } from "react";
 import { Toaster } from "sonner";
 import { Navbar } from "./components/Navbar";
@@ -6,11 +5,12 @@ import { Hero } from "./components/Hero";
 import { TrustBanner } from "./components/TrustBanner";
 import { Features } from "./components/Features";
 import { Mentor } from "./components/Mentor";
-import { Research } from "./components/Research"; // <-- 1. Import it here
+import { Research } from "./components/Research";
 import { Pricing } from "./components/Pricing";
 import { Footer } from "./components/Footer";
 import { DropNotification } from "./components/DropNotification";
 import { SyllabusModal } from "./components/SyllabusModal";
+import { OfferNotification } from "./components/OfferNotification";
 import "./App.css";
 
 function App() {
@@ -30,16 +30,16 @@ function App() {
       
       <DropNotification onOpenModal={() => setIsSyllabusOpen(true)} />
       <SyllabusModal isOpen={isSyllabusOpen} onClose={() => setIsSyllabusOpen(false)} />
+      
+      {/* New promotional notification */}
+      <OfferNotification />
 
       <main>
         <Hero onPrimary={scrollToPricing} onSecondary={scrollToMentor} />
         <TrustBanner />
         <Features />
         <Mentor />
-        
-        {/* 2. Insert Research here so it builds trust right before the Pricing table */}
         <Research /> 
-        
         <Pricing />
       </main>
       
