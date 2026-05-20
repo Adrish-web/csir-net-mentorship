@@ -286,8 +286,8 @@ export const SyllabusModal = ({ isOpen, onClose }) => {
                                 <motion.div
                                   initial={{ width: 0 }}
                                   whileInView={{ width: `${row.pctB}%` }}
-                                  transition={{ duration: 1, ease: "easeOut", delay: i * 0.05 }}
-                                  viewport={{ once: true, margin: "-20px" }}
+                                  transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+                                  viewport={{ once: true }}
                                   className="h-full bg-gradient-to-r from-cyan-600 to-cyan-400 rounded-full shadow-[0_0_10px_rgba(34,211,238,0.5)]"
                                 />
                               </div>
@@ -301,8 +301,8 @@ export const SyllabusModal = ({ isOpen, onClose }) => {
                                 <motion.div
                                   initial={{ width: 0 }}
                                   whileInView={{ width: `${row.pctC}%` }}
-                                  transition={{ duration: 1, ease: "easeOut", delay: (i * 0.05) + 0.2 }}
-                                  viewport={{ once: true, margin: "-20px" }}
+                                  transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
+                                  viewport={{ once: true }}
                                   className="h-full bg-gradient-to-r from-green-600 to-green-400 rounded-full shadow-[0_0_10px_rgba(74,222,128,0.5)]"
                                 />
                               </div>
