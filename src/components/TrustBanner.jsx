@@ -59,7 +59,7 @@ const trustMarks = [
   {
     name: "Emory University",
     type: "image",
-    src: "../logos/emory.png", // Make sure file is exactly "emory.png" (lowercase) in your public/logos/ folder
+    src: "https://i.ibb.co/ycXfcs16/emory.png", // Make sure file is exactly "emory.png" (lowercase) in your public/logos/ folder
   },
 ];
 

@@ -17,7 +17,7 @@ const NOTES_DATA = [
     title: "Cell Cycle & Apoptosis",
     unit: "Unit 2: Cellular Organization",
     pages: 14,
-    previewUrl: "../logos/apoptosis.jpeg"
+    previewUrl: "https://i.ibb.co/ymkZmFNb/apoptosis.jpg"
   },
   {
     id: 3,
