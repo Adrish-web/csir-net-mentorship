@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Menu, X, FlaskConical } from "lucide-react";
 
+// ADD "Notes" TO THE NAVIGATION LINKS HERE
 const links = [
   { label: "About Mentor", href: "#mentor" },
-  { label: "Research", href: "#research" },      // <-- Added this line
+  { label: "Research", href: "#research" },      
+  { label: "Notes", href: "#notes" },            // <-- ADDED THIS LINE
   { label: "Course Features", href: "#features" },
   { label: "Pricing", href: "#pricing" },
 ];

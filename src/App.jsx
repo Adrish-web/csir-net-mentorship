@@ -5,7 +5,8 @@ import { Hero } from "./components/Hero";
 import { TrustBanner } from "./components/TrustBanner";
 import { Features } from "./components/Features";
 import { Mentor } from "./components/Mentor";
-import { Research } from "./components/Research";
+import { Research } from "./components/Research"; 
+import { NotesPreview } from "./components/NotesPreview"; // <-- IMPORT IT HERE
 import { Pricing } from "./components/Pricing";
 import { Footer } from "./components/Footer";
 import { DropNotification } from "./components/DropNotification";
@@ -31,7 +32,6 @@ function App() {
       <DropNotification onOpenModal={() => setIsSyllabusOpen(true)} />
       <SyllabusModal isOpen={isSyllabusOpen} onClose={() => setIsSyllabusOpen(false)} />
       
-      {/* New promotional notification */}
       <OfferNotification />
 
       <main>
@@ -40,6 +40,10 @@ function App() {
         <Features />
         <Mentor />
         <Research /> 
+        
+        {/* Render Notes Gallery before pricing */}
+        <NotesPreview />
+        
         <Pricing />
       </main>
       
